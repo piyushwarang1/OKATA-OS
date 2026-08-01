@@ -102,6 +102,20 @@ var notesheader = document.getElementById("notesheader");
 var biggerIndex = 1;
 var topbar = document.querySelector("#top");
 let quill = null;
+var confettiIcon = document.getElementById("confitti-icon");
+var terminalIcon = document.getElementById("terminal-icon");
+var terminalWindow = document.getElementById("terminalUi");
+var terminalCloseBtn = document.getElementById("terminalcloseBtn");
+
+terminalIcon.addEventListener("click", function() {
+    openWindow(terminalWindow);
+});
+confettiIcon.addEventListener("click", (event) => {
+    confetti({
+        position: { x: event.clientX, y: event.clientY },
+        color: ["#6941af", "#b31bf4", "#06B6D4"]
+    });
+});
 
 notesIcon.addEventListener("click", function() {
     notesWindow.style.display = "block";
@@ -122,6 +136,10 @@ notesIcon.addEventListener("click", function() {
 
 closeNotesBtn.addEventListener("click", function() {
     notesWindow.style.display = "none";
+});
+
+terminalCloseBtn.addEventListener("click", function() {
+    terminalWindow.style.display = "none";
 });
 
 dragElement(document.getElementById("notesUi"));
@@ -158,4 +176,57 @@ function initializeWindow(elementName) {
     
 }
 initializeWindow("notesUi");
+initializeWindow("terminalUi");
 
+
+const term = new Terminal({
+        cursorBlink: true,
+        cursorStyle: 'bar',
+        fontFamily: 'monospace',
+        
+    });
+
+term.open(document.getElementById('terminal'));
+term.write('Hello from OKATA-OS $ ')
+term.write('Type \x1b[1;33mhelp\x1b[0m to see available commands.\r\n\r\n$ ');
+let currentLine = '';
+
+function processCommand(command) {
+    if(command === 'help'){
+        term.write('\r\nAvailable commands:\r\n');
+        term.write('help - Show this help message\r\n');
+        term.write('clear - Clear the terminal\r\n');
+        term.write('echo [text] - Echo the provided text\r\n');
+        term.write('date - Show the current date and time\r\n');
+        term.write('exit - Close the terminal\r\n');
+    }else if (command === 'clear'){
+        term.clear();
+    }else if (command.startsWith('echo ')){
+        const textToEcho = command.slice(5);
+        term.write('\r\n' + textToEcho + '\r\n');
+    }else if (command === 'date'){
+        const currentDate = new Date().toLocaleString();
+        term.write('\r\n' + currentDate + '\r\n');
+    }else if (command === 'exit'){
+        terminalWindow.style.display = "none";
+    }else{
+        term.write('\r\nUnknown command: ' + command + '\r\n');
+    }
+}
+
+term.onKey(e => {
+    const char = e.key;
+    if (char === '\r') { // Enter key
+        processCommand(currentLine);
+        currentLine = '';
+        term.write('\r\n$ ');
+    } else if (char === '\u007F') { // Backspace key
+        if (currentLine.length > 0) {
+            currentLine = currentLine.slice(0, -1);
+            term.write('\b \b'); // Move back, write space, move back again
+        }
+    } else {
+        currentLine += char;
+        term.write(char);
+    }
+});
