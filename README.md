@@ -9,4 +9,3 @@ If any suggestions, issues, or bugs are found in the project, put them in the is
 
 # AI usage
 Some AI is used to fix bugs in the web-based OS.
-
