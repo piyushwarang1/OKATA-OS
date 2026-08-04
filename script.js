@@ -177,7 +177,7 @@ function initializeWindow(elementName) {
 }
 initializeWindow("notesUi");
 initializeWindow("terminalUi");
-
+initializeWindow("calculatorUI");
 
 const term = new Terminal({
         cursorBlink: true,
@@ -199,6 +199,9 @@ function processCommand(command) {
         term.write('echo [text] - Echo the provided text\r\n');
         term.write('date - Show the current date and time\r\n');
         term.write('exit - Close the terminal\r\n');
+        term.write('calculator - Open the calculator\r\n');
+        term.write('confetti - Trigger a confetti effect\r\n');
+        term.write('notes - Open the notes window\r\n');
     }else if (command === 'clear'){
         term.clear();
     }else if (command.startsWith('echo ')){
@@ -209,6 +212,18 @@ function processCommand(command) {
         term.write('\r\n' + currentDate + '\r\n');
     }else if (command === 'exit'){
         terminalWindow.style.display = "none";
+    }else if (command === 'calculator'){
+        calculatorWindow.style.display = "block";
+    }else if (command === 'select-all'){
+        selectAll();
+    
+    }else if (command === 'confetti'){
+        confetti({
+            position: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+            color: ["#6941af", "#b31bf4", "#06B6D4"]
+        });
+    }else if (command === 'notes'){
+        notesWindow.style.display ="block";
     }else{
         term.write('\r\nUnknown command: ' + command + '\r\n');
     }
@@ -230,3 +245,22 @@ term.onKey(e => {
         term.write(char);
     }
 });
+
+var calculatorIcon = document.getElementById("calculator-icon");
+var calculatorWindow = document.getElementById("calculatorUI");
+var calculatorCloseBtn = document.getElementById("calculatorcloseBtn");
+
+var calculatorReady = false;
+calculatorIcon.addEventListener("click", function() {
+    calculatorWindow.style.display = "block";
+});
+
+if (!window.calculatorReady) {
+    window.calculator = Desmos.GraphingCalculator(document.getElementById("Desmos"));
+    window.calculatorReady = true;
+  }
+
+calculatorCloseBtn.addEventListener("click", function() {
+    calculatorWindow.style.display = "none";
+});
+
