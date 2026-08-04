@@ -5,7 +5,7 @@ A web based os With basic apps
 With a modern interface with real-time updates shown on the os with 4 apps
 
 # Suggestions or issues
-If any suggestions, issues, or bugs are found in the project, put it on issues so I can cover them
+If any suggestions, issues, or bugs are found in the project, put them in the issues so I can cover them
 
 # AI usage
-Some AI is used to solve bugs in the web based os.
+Some AI is used to fix bugs in the web-based OS.
