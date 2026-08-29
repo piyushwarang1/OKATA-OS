@@ -107,32 +107,39 @@ var terminalIcon = document.getElementById("terminal-icon");
 var terminalWindow = document.getElementById("terminalUi");
 var terminalCloseBtn = document.getElementById("terminalcloseBtn");
 
-terminalIcon.addEventListener("click", function() {
-    openWindow(terminalWindow);
-});
-confettiIcon.addEventListener("click", (event) => {
-    confetti({
-        position: { x: event.clientX, y: event.clientY },
-        color: ["#6941af", "#b31bf4", "#06B6D4"]
+if (terminalIcon && terminalWindow) {
+    terminalIcon.addEventListener("click", function() {
+        openWindow(terminalWindow);
     });
-});
+}
 
-notesIcon.addEventListener("click", function() {
-    notesWindow.style.display = "block";
-
-    if(!quill) {
-        quill = new Quill('#quill-editor', {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ header: [1, 2, false] }],
-                    ['bold', 'italic', 'underline'],
-                    ['image', 'code-block']
-                ]
-            }
+if (confettiIcon && typeof confetti !== 'undefined') {
+    confettiIcon.addEventListener("click", (event) => {
+        confetti({
+            position: { x: event.clientX, y: event.clientY },
+            color: ["#6941af", "#b31bf4", "#06B6D4"]
         });
-    }
-});
+    });
+}
+
+if (notesIcon && notesWindow) {
+    notesIcon.addEventListener("click", function() {
+        notesWindow.style.display = "block";
+
+        if (!quill && window.Quill && document.getElementById('quill-editor')) {
+            quill = new Quill('#quill-editor', {
+                theme: 'snow',
+                modules: {
+                    toolbar: [
+                        [{ header: [1, 2, false] }],
+                        ['bold', 'italic', 'underline'],
+                        ['image', 'code-block']
+                    ]
+                }
+            });
+        }
+    });
+}
 
 closeNotesBtn.addEventListener("click", function() {
     notesWindow.style.display = "none";
@@ -179,72 +186,70 @@ initializeWindow("notesUi");
 initializeWindow("terminalUi");
 initializeWindow("calculatorUI");
 
-const term = new Terminal({
+if (window.Terminal && document.getElementById('terminal')) {
+    const term = new Terminal({
         cursorBlink: true,
         cursorStyle: 'bar',
         fontFamily: 'monospace',
-        
     });
 
-term.open(document.getElementById('terminal'));
-term.write('Hello from OKATA-OS $ ')
-term.write('Type \x1b[1;33mhelp\x1b[0m to see available commands.\r\n\r\n$ ');
-let currentLine = '';
+    term.open(document.getElementById('terminal'));
+    term.write('Hello from OKATA-OS $ ')
+    term.write('Type \x1b[1;33mhelp\x1b[0m to see available commands.\r\n\r\n$ ');
+    let currentLine = '';
 
-function processCommand(command) {
-    if(command === 'help'){
-        term.write('\r\nAvailable commands:\r\n');
-        term.write('help - Show this help message\r\n');
-        term.write('clear - Clear the terminal\r\n');
-        term.write('echo [text] - Echo the provided text\r\n');
-        term.write('date - Show the current date and time\r\n');
-        term.write('exit - Close the terminal\r\n');
-        term.write('calculator - Open the calculator\r\n');
-        term.write('confetti - Trigger a confetti effect\r\n');
-        term.write('notes - Open the notes window\r\n');
-    }else if (command === 'clear'){
-        term.clear();
-    }else if (command.startsWith('echo ')){
-        const textToEcho = command.slice(5);
-        term.write('\r\n' + textToEcho + '\r\n');
-    }else if (command === 'date'){
-        const currentDate = new Date().toLocaleString();
-        term.write('\r\n' + currentDate + '\r\n');
-    }else if (command === 'exit'){
-        terminalWindow.style.display = "none";
-    }else if (command === 'calculator'){
-        calculatorWindow.style.display = "block";
-    }else if (command === 'select-all'){
-        selectAll();
-    
-    }else if (command === 'confetti'){
-        confetti({
-            position: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
-            color: ["#6941af", "#b31bf4", "#06B6D4"]
-        });
-    }else if (command === 'notes'){
-        notesWindow.style.display ="block";
-    }else{
-        term.write('\r\nUnknown command: ' + command + '\r\n');
-    }
-}
-
-term.onKey(e => {
-    const char = e.key;
-    if (char === '\r') { // Enter key
-        processCommand(currentLine);
-        currentLine = '';
-        term.write('\r\n$ ');
-    } else if (char === '\u007F') { // Backspace key
-        if (currentLine.length > 0) {
-            currentLine = currentLine.slice(0, -1);
-            term.write('\b \b'); // Move back, write space, move back again
+    function processCommand(command) {
+        if(command === 'help'){
+            term.write('\r\nAvailable commands:\r\n');
+            term.write('help - Show this help message\r\n');
+            term.write('clear - Clear the terminal\r\n');
+            term.write('echo [text] - Echo the provided text\r\n');
+            term.write('date - Show the current date and time\r\n');
+            term.write('exit - Close the terminal\r\n');
+            term.write('calculator - Open the calculator\r\n');
+            term.write('confetti - Trigger a confetti effect\r\n');
+            term.write('notes - Open the notes window\r\n');
+        }else if (command === 'clear'){
+            term.clear();
+        }else if (command.startsWith('echo ')){
+            const textToEcho = command.slice(5);
+            term.write('\r\n' + textToEcho + '\r\n');
+        }else if (command === 'date'){
+            const currentDate = new Date().toLocaleString();
+            term.write('\r\n' + currentDate + '\r\n');
+        }else if (command === 'exit'){
+            terminalWindow.style.display = "none";
+        }else if (command === 'calculator'){
+            calculatorWindow.style.display = "block";
+        }else if (command === 'confetti'){
+            confetti({
+                position: { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+                color: ["#6941af", "#b31bf4", "#06B6D4"]
+            });
+        }else if (command === 'notes'){
+            notesWindow.style.display ="block";
+        }else{
+            term.write('\r\nUnknown command: ' + command + '\r\n');
         }
-    } else {
-        currentLine += char;
-        term.write(char);
     }
-});
+
+    term.onKey(e => {
+        const char = e.key;
+        if (char === '\r') { // Enter key
+            processCommand(currentLine);
+            currentLine = '';
+            term.write('\r\n$ ');
+        } else if (char === '\u007F') { // Backspace key
+            if (currentLine.length > 0) {
+                currentLine = currentLine.slice(0, -1);
+                term.write('\b \b'); // Move back, write space, move back again
+            }
+        } else {
+            currentLine += char;
+            term.write(char);
+        }
+    });
+}
 
 var calculatorIcon = document.getElementById("calculator-icon");
 var calculatorWindow = document.getElementById("calculatorUI");
