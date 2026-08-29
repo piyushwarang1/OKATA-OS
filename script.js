@@ -251,16 +251,81 @@ var calculatorWindow = document.getElementById("calculatorUI");
 var calculatorCloseBtn = document.getElementById("calculatorcloseBtn");
 
 var calculatorReady = false;
-calculatorIcon.addEventListener("click", function() {
-    calculatorWindow.style.display = "block";
-});
 
-if (!window.calculatorReady) {
-    window.calculator = Desmos.GraphingCalculator(document.getElementById("Desmos"));
-    window.calculatorReady = true;
-  }
+if (calculatorIcon && calculatorWindow) {
+    calculatorIcon.addEventListener("click", function() {
+        calculatorWindow.style.display = "block";
+    });
+}
 
-calculatorCloseBtn.addEventListener("click", function() {
-    calculatorWindow.style.display = "none";
-});
+if (calculatorCloseBtn && calculatorWindow) {
+    calculatorCloseBtn.addEventListener("click", function() {
+        calculatorWindow.style.display = "none";
+    });
+}
 
+let currentInput = '';
+let currentOperation = '';
+let previousInput = '';
+
+function updateDisplay(value) {
+    const display = document.getElementById('display');
+    if (!display) return;
+    display.textContent = value;
+    if ('value' in display) {
+        display.value = value;
+    }
+}
+
+function appendNumber(number) {
+    currentInput += number;
+    updateDisplay(`${previousInput} ${currentOperation} ${currentInput}`.trim());
+}
+
+function appendOperator(operator) {
+    if (currentInput === '') return;
+    if (previousInput !== '' && currentOperation !== '') {
+        calculate();
+    }
+    currentOperation = operator;
+    previousInput = currentInput;
+    currentInput = '';
+    updateDisplay(`${previousInput} ${currentOperation}`);
+}
+
+function calculate() {
+    if (previousInput === '' || currentInput === '') return;
+
+    let prev = parseFloat(previousInput);
+    let current = parseFloat(currentInput);
+    let result = 0;
+
+    switch (currentOperation) {
+        case '+':
+            result = prev + current;
+            break;
+        case '-':
+            result = prev - current;
+            break;
+        case '*':
+            result = prev * current;
+            break;
+        case '/':
+            result = current === 0 ? NaN : prev / current;
+            break;
+        default:
+            return;
+    }
+
+    currentInput = result.toString();
+    currentOperation = '';
+    previousInput = '';
+    updateDisplay(currentInput);
+}
+
+function clearDisplay() {
+    currentInput = '';
+    currentOperation = '';
+    previousInput = '';
+    updateDisplay('0');
+}

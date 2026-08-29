@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="node_modules/@xterm/xterm/css/xterm.css" />
     <link rel="stylesheet" href="https://unpkg.com/kursor/dist/kursor.css">
     <link href="https://cdn.jsdelivr.net/npm/quill@1.3.6/dist/quill.snow.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -96,26 +97,43 @@
       <div style="display: none; border: solid; width: 1000px; padding: 16px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; border-radius: 30px;" id="calculatorUI">
     <div id="calculatorheader" style="width: 100%; display: flex; justify-content: flex-start;">
         <p style="cursor: pointer; background-color: red; padding: 5px; border: 1px solid #000000; border-radius: 100%;" id="calculatorcloseBtn">X</p>
-        <p class="headertext">Calculator</p>
+        <p class="headertext" style="height: 100px; width:200px">Calculator</p>
     </div>
-        <div id="Desmos" style="width: 100%; height: 450px;"></div>
-       
+      <div id="calculator" style="width: 100%; height: 480px; padding: 16px; margin: 6px 0; border-radius: 12px;">
+
+      <div class="calculator__output" id="display">0</div>
+      <!--Take from cssacademy.com-->
+      <button class="calculator__key calculator__key--operator" onclick="appendOperator('+')">+</button>
+      <button class="calculator__key calculator__key--operator" onclick="appendOperator('-')">-</button>
+      <button class="calculator__key calculator__key--operator" onclick="appendOperator('*')">*</button>
+      <button class="calculator__key calculator__key--operator" onclick="appendOperator('/')">÷</button>
+      <button class="calculator__key"  onclick="appendNumber('7')">7</button>
+      <button class="calculator__key" onclick="appendNumber('8')">8</button>
+      <button class="calculator__key" onclick="appendNumber('9')">9</button>
+      <button class="calculator__key" onclick="appendNumber('4')">4</button>
+      <button class="calculator__key" onclick="appendNumber('5')">5</button>
+      <button class="calculator__key" onclick="appendNumber('6')">6</button>
+      <button class="calculator__key" onclick="appendNumber('1')">1</button>
+      <button class="calculator__key" onclick="appendNumber('2')">2</button>
+      <button class="calculator__key" onclick="appendNumber('3')">3</button>
+      <button class="calculator__key" onclick="appendNumber('0')">0</button>
+      <button class="calculator__key" onclick="appendNumber('.')">.</button>
+      <button class="calculator__key" onclick="clearDisplay()">AC</button>
+      <button class="calculator__key calculator__key--enter" onclick="calculate()">=</button>
+
+      </div>       
     </div>
 
   </div>
 </body>
+
 <script src="https://www.desmos.com/api/v1.12/calculator.js?apiKey=4b47045ff7c64d9d9b866f30353fd3f8"></script>
 <script src="node_modules/@xterm/xterm/lib/xterm.js"></script>
-   <script src="script.js">
-    
-   </script>
-   <script src="https://cdn.jsdelivr.net/npm/quill@1.3.6/dist/quill.js"></script>
-   <script>
-    
-   </script>
-   <script src="https://unpkg.com/kursor"></script>
-   <script src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.2.0/dist/confetti.min.js"></script>
-   <script>
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.6/dist/quill.js"></script>
+<script src="script.js"></script>
+<script src="https://unpkg.com/kursor"></script>
+<script src="https://cdn.jsdelivr.net/npm/@hiseb/confetti@2.2.0/dist/confetti.min.js"></script>
+<script>
     new kursor({
     type: 4,
     color: '#27EEF5',
@@ -124,6 +142,6 @@
     effectSize: 5,
     effectDuration: 0.5
     })
-   </script>
+</script>
    
 </html>
